@@ -50,7 +50,12 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [
+          resolve('src'),
+          resolve('test'),
+          resolve('./src'),
+          resolve('./node_modules/vuetify')
+        ]
       },
       {
         test: /\.styl$/,
