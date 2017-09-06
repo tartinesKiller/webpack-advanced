@@ -94,21 +94,24 @@
 
 <script>
   export default {
-    data () {
+    data() {
       return {
         clipped: false,
         drawer: true,
         fixed: false,
         items: [
-          { icon: 'bubble_chart', title: 'Inspire' }
+          { 
+            icon: 'bubble_chart',
+            title: 'Inspire'{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
+          }{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Vuetify.js'
-      }
-    }
-  }
+        title: 'Vuetify.js'{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
+      }{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
+    }{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
+  }{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 </script>
 
 <style lang="stylus">
