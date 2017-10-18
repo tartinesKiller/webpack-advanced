@@ -21,6 +21,7 @@ import {
 {{else}}
 import Vuetify from 'vuetify'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 {{/alacarte}}
+import './stylus/main.styl'
 
 import App from './App'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 {{#router}}

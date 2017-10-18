@@ -116,7 +116,3 @@
   }{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 
 </script>
-
-<style lang="stylus">
-  @import './stylus/main'
-</style>
