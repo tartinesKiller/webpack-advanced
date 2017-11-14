@@ -20,7 +20,7 @@ import {
 import '../node_modules/vuetify/src/stylus/app.styl'
 {{else}}
 import Vuetify from 'vuetify'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
-import '../node_modules/vuetify/src/stylus/main.styl'
+import 'vuetify/dist/vuetify.css'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
 {{/alacarte}}
 
 import App from './App'{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
