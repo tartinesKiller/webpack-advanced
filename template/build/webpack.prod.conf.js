@@ -91,6 +91,17 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
       chunks: ['vendor']
     }),
+    // when lazy-loading pages this eliminates code-duplication by gathering common code into a single module.
+    // see https://forum.vuejs.org/t/lazy-loading-vue-pages-with-webpack-causes-a-lot-of-code-duplication/19090
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      children: true,
+      // (use all children of the chunk)
+      async: true,
+      // (create an async commons chunk)
+      minChunks: 3
+      // (3 children must share the module before it's separated)
+    }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
