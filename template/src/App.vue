@@ -1,111 +1,217 @@
 <template>
-  <v-app light>
-    <v-navigation-drawer
-      fixed
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      v-model="drawer"
-      app
-    >
-      <v-list>
-        <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          value="true"
-        >
-          <v-list-tile-action>
-            <v-icon light v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-content>
-      <v-container fluid>
+    <v-app :light="lightTheme" :dark="!lightTheme" :class="{ noAnim: !animationsEnabled }">
+        <v-navigation-drawer app clipped persistent enable-resize-watcher dark class="secondary" v-model="drawer" v-if="isLoggedIn">
+            <v-list>
+                <template v-for="item in latmenuItem">
+                    <v-divider v-if="item.separator" :key="item.title" />
+                    <v-list-tile :key="item.title" :to="item.routerLink" ripple>
+                        <v-list-tile-action>
+                            <v-badge :value="item.badge()" v-if="item.badge()" right>
+                                <span slot="badge">\{\{ item.badgeContent() \}\}</span>
+                                <v-icon dark>\{\{ item.icon \}\}</v-icon>
+                            </v-badge>
+                            <v-icon v-else dark>\{\{ item.icon \}\}</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>\{\{ item.title \}\}</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </template>
+            </v-list>
+        </v-navigation-drawer>
         <v-slide-y-transition mode="out-in">
-          <v-layout column align-center>
-            <img src="/static/v.png" alt="Vuetify.js" class="mb-5" />
-            <blockquote>
-              &#8220;First, solve the problem. Then, write the code.&#8221;
-              <footer>
-                <small>
-                  <em>&mdash;John Johnson</em>
-                </small>
-              </footer>
-            </blockquote>
-          </v-layout>
+            <v-toolbar fixed clipped-left class="primary" v-if="isTbShow" app>
+                <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn" />
+                <v-avatar tile class="pl-3">
+                    <img src="/static/icon.png">
+                </v-avatar>
+                <v-toolbar-title class="clickable" v-text="title" @click="$router.push('/')"></v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-fade-transition mode="out-in">
+                    <v-progress-circular indeterminate color="accent" v-if="bgTaskRunning">
+                        <v-icon class="accent--text">file_upload</v-icon>
+                    </v-progress-circular>
+                </v-fade-transition>
+                <v-menu bottom left>
+                    <v-avatar class="red ma-3" slot="activator" v-show="isLoggedIn">
+                        <span class="white--text headline">\{\{ username | firstLetter \}\}</span>
+                    </v-avatar>
+                    <v-list>
+                        <v-list-tile @click="logout">
+                            <v-list-tile-title>Logout</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
+            </v-toolbar>
         </v-slide-y-transition>
-      </v-container>
-    </v-content>
-    <v-navigation-drawer
-      temporary
-      fixed
-      :right="right"
-      v-model="rightDrawer"
-      app
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
-    </v-footer>
-  </v-app>
+        <main>
+            <v-content>
+                <v-container fluid :class="isTbShow ? '' : 'pa-0 fullheight'">
+                    <v-slide-x-transition mode="out-in">
+                        <router-view></router-view>
+                    </v-slide-x-transition>
+                </v-container>
+            </v-content>
+        </main>
+        <v-snackbar :timeout="snackbar.timeout" v-model="snackbar.show">
+            \{\{ snackbar.text \}\}
+        </v-snackbar>
+    </v-app>
 </template>
+<i18n>
+    {
+        "en": {
+            "logout": "You have been logged out.",
+            "welcome": "Welcome, {username}!",
+            "patientsdashboard": "Dashboard patients",
+            "pendingrecords": "Records",
+            "pendingphotos": "Photos",
+            "settings": "Settings"
+        },
+        "fr": {
+            "logout": "Vous avez été déconnecté.",
+            "welcome": "Bienvenue, {username} !",
+            "patientsdashboard": "Tableau de bord patients",
+            "pendingrecords": "Enregistrements",
+            "pendingphotos": "Photos",
+            "settings": "Paramètres"
+        }
+    }
+</i18n>
 
 <script>
-  export default {
-    data{{#unless_eq lintConfig "airbnb"}} {{/unless_eq}}() {
-      return {
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [{
-          icon: 'bubble_chart',
-          title: 'Inspire'{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
-        }],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Vuetify.js'{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
-      }{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
-    }{{#if_eq lintConfig "airbnb"}},{{/if_eq}}
-  }{{#if_eq lintConfig "airbnb"}};{{/if_eq}}
+import { EventBus } from "./EventBus";
+import { mapGetters, mapActions } from "vuex";
+export default {
+    data () {
+        return {
+            title: "Conform",
+            snackbar: {
+                text: "",
+                timeout: 3000,
+                show: false,
+            },
+            drawer: false,
+            latmenuItem: [
+                { title: this.$t("patientsdashboard"), icon: "people", routerLink: {name: "patients"}, badge: () => false },
+                { title: this.$t("pendingrecords"), icon: "mic", routerLink: {name: "audiorecords-list"}, badge: () => !!this.recordsCount, badgeContent: () => this.recordsCount },
+                { title: this.$t("pendingphotos"), icon: "camera", routerLink: {name: "photos-list"}, badge: () => !!this.photosCount, badgeContent: () => this.photosCount },
+                { title: this.$t("settings"), icon: "settings_applications", separator: true, routerLink: {name: "settings"}, badge: () => false },
+            ],
+            indexTab: 0,
+        };
+    },
+    computed: {
+        ...mapGetters(["username", "isLoggedIn", "lightTheme", "animationsEnabled", "bgTaskRunning", "getAudioRecordsCount", "isTbShow"]),
+        recordsCount () {
+            return this.$store.getters.getAudioRecordsCount(null);
+        },
+        photosCount () {
+            return this.$store.getters.getPhotosCount(null);
+        },
+    },
+    created () {
+        EventBus.$on("snackbar", this.showSnackbar);
+        EventBus.$on("logout", () => {
+            this.$router.push("/login");
+            EventBus.$emit("snackbar", this.$t("logout"), 3000);
+        });
+        EventBus.$on("login", user => {
+            EventBus.$emit("snackbar", this.$t("welcome", { username: user.UserName }), 3000);
+        });
+
+        window.addEventListener("resize", () => {
+            if (screen.width < 600) {
+                document.getElementById("viewport").setAttribute("content", "initial-scale=0.7");
+            } else {
+                document.getElementById("viewport").setAttribute("content", "initial-scale=1");
+            }
+        });
+        window.dispatchEvent(new Event("resize"));
+    },
+    methods: {
+        ...mapActions(["logout"]),
+        showSnackbar (message, timeout) {
+            this.snackbar.text = message;
+            this.snackbar.timeout = timeout;
+            this.snackbar.show = true;
+        },
+        goToTungsten () {
+            window.open("http://tungstensoftware.fr/wp/", "_blank");
+        },
+    },
+};
 </script>
+
+<style scoped>
+    .clickable {
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .clickable:hover {
+        color: lightgray;
+    }
+
+    #app {
+        transition: background-color 0.3s;
+    }
+</style>
+<style>
+    .noselect {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+        supported by Chrome and Opera */
+    }
+
+    .toolbar__title {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+        supported by Chrome and Opera */
+    }
+
+    /* * { transition: none !important } */
+
+    .noAnim * {
+        transition: none !important;
+    }
+
+    .datatable__expand-content:not(.v-leave-to) {
+        height: auto !important;
+    }
+
+    .center {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .fullwidth {
+        width: 100% !important;
+    }
+    .fullheight {
+        height: 100% !important;
+    }
+</style>
+<style lang="stylus">
+    @import './stylus/main'
+</style>
