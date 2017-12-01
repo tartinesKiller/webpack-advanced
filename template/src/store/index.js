@@ -1,6 +1,6 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import { ServiceAuth } from "./services/serviceAuth";
+import { ServiceAuth } from "../services/serviceAuth";
 import createPersistedState from "vuex-persistedstate";
 import { EventBus } from "../EventBus";
 
@@ -13,6 +13,7 @@ const IN_PROGRESS = "IN_PROGRESS";
 const TOGGLE_THEME = "TOGGLE_THEME";
 const TOGGLE_ANIMATIONS = "TOGGLE_ANIMATIONS";
 const SET_ANIMATIONS_ENABLED = "SET_ANIMATIONS_ENABLED";
+const SET_BG_TASK_RUNNING = "SET_BG_TASK_RUNNING";
 
 const _auth = new ServiceAuth();
 
@@ -27,11 +28,15 @@ export const store = new Vuex.Store({
             light: true,
             animations: true,
         },
+        backgroundTaskInProgress: false,
         user: undefined,
         loggedIn: false,
         inProgress: false,
     },
     mutations: {
+        [SET_BG_TASK_RUNNING] (state, value) {
+            state.backgroundTaskInProgress = value;
+        },
         [IN_PROGRESS] (state) {
             state.inProgress = true;
         },
@@ -103,6 +108,9 @@ export const store = new Vuex.Store({
         setAnimationEnabled ({commit}, value) {
             commit(SET_ANIMATIONS_ENABLED, value);
         },
+        setBgTaskRunning ({commit}, value) {
+            commit(SET_BG_TASK_RUNNING, value);
+        },
     },
     getters: {
         isLoggedIn: state => state.loggedIn,
@@ -112,9 +120,10 @@ export const store = new Vuex.Store({
             }
             return state.user.UserName;
         },
+        bgTaskRunning: state => state.backgroundTaskInProgress,
         inProgress: state => state.inProgress,
         lightTheme: state => state.settings.light,
         user: state => state.user,
         animationsEnabled: state => state.settings.animations,
-    }
+    },
 });

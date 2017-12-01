@@ -1,9 +1,9 @@
 <template>
-    <div id='login'>
+    <div id="login">
         <v-layout row justify-center>
             <v-flex xs12 sm10 md6 lg5 >
                 <v-alert value="true" color="warning">
-                    <v-icon>lock</v-icon> \{\{ $t("requireLogin") \}\}
+                    <v-icon>lock</v-icon> \{{ $t("requireLogin") }}
                 </v-alert>
             </v-flex>
         </v-layout>
@@ -13,7 +13,7 @@
                 <transition appear name="slide-x-transition">
                     <v-card>
                             <v-card-title primary-title>
-                                <div class="headline">\{\{ $t("login") \}\}</div>
+                                <div class="headline">\{{ $t("login") }}</div>
                             </v-card-title>
                             <v-card-text>
                                 <v-text-field :label="$t('lblUsername')" v-model="vm.username" required autofocus :error="error"></v-text-field>

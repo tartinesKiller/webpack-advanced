@@ -29,7 +29,9 @@
     "vuetify": "^0.17.3",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.4.2",
-    "vue-i18n": "^7.3.2"
+    "vue-i18n": "^7.3.2",
+    "moment": "^2.19.1",
+    "axios": "^0.16.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -51,6 +53,7 @@
     "css-loader": "^0.28.0",
     {{#lint}}
     "eslint": "^3.19.0",
+    "eslint-plugin-vue": "beta",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
     "eslint-plugin-html": "^3.0.0",

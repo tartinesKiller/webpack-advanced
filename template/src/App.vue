@@ -7,20 +7,20 @@
                     <v-list-tile :key="item.title" :to="item.routerLink" ripple>
                         <v-list-tile-action>
                             <v-badge :value="item.badge()" v-if="item.badge()" right>
-                                <span slot="badge">\{\{ item.badgeContent() \}\}</span>
-                                <v-icon dark>\{\{ item.icon \}\}</v-icon>
+                                <span slot="badge">\{{ item.badgeContent() }}</span>
+                                <v-icon dark>\{{ item.icon }}</v-icon>
                             </v-badge>
-                            <v-icon v-else dark>\{\{ item.icon \}\}</v-icon>
+                            <v-icon v-else dark>\{{ item.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>\{\{ item.title \}\}</v-list-tile-title>
+                            <v-list-tile-title>\{{ item.title }}</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </template>
             </v-list>
         </v-navigation-drawer>
         <v-slide-y-transition mode="out-in">
-            <v-toolbar fixed clipped-left class="primary" v-if="isTbShow" app>
+            <v-toolbar fixed clipped-left class="primary" app>
                 <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn" />
                 <v-avatar tile class="pl-3">
                     <img src="/static/icon.png">
@@ -34,7 +34,7 @@
                 </v-fade-transition>
                 <v-menu bottom left>
                     <v-avatar class="red ma-3" slot="activator" v-show="isLoggedIn">
-                        <span class="white--text headline">\{\{ username | firstLetter \}\}</span>
+                        <span class="white--text headline">\{{ username | firstLetter }}</span>
                     </v-avatar>
                     <v-list>
                         <v-list-tile @click="logout">
@@ -46,7 +46,7 @@
         </v-slide-y-transition>
         <main>
             <v-content>
-                <v-container fluid :class="isTbShow ? '' : 'pa-0 fullheight'">
+                <v-container fluid>
                     <v-slide-x-transition mode="out-in">
                         <router-view></router-view>
                     </v-slide-x-transition>
@@ -54,30 +54,10 @@
             </v-content>
         </main>
         <v-snackbar :timeout="snackbar.timeout" v-model="snackbar.show">
-            \{\{ snackbar.text \}\}
+            \{{ snackbar.text }}
         </v-snackbar>
     </v-app>
 </template>
-<i18n>
-    {
-        "en": {
-            "logout": "You have been logged out.",
-            "welcome": "Welcome, {username}!",
-            "patientsdashboard": "Dashboard patients",
-            "pendingrecords": "Records",
-            "pendingphotos": "Photos",
-            "settings": "Settings"
-        },
-        "fr": {
-            "logout": "Vous avez été déconnecté.",
-            "welcome": "Bienvenue, {username} !",
-            "patientsdashboard": "Tableau de bord patients",
-            "pendingrecords": "Enregistrements",
-            "pendingphotos": "Photos",
-            "settings": "Paramètres"
-        }
-    }
-</i18n>
 
 <script>
 import { EventBus } from "./EventBus";
@@ -85,7 +65,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
     data () {
         return {
-            title: "Conform",
+            title: "My super dupper app",
             snackbar: {
                 text: "",
                 timeout: 3000,
@@ -93,22 +73,13 @@ export default {
             },
             drawer: false,
             latmenuItem: [
-                { title: this.$t("patientsdashboard"), icon: "people", routerLink: {name: "patients"}, badge: () => false },
-                { title: this.$t("pendingrecords"), icon: "mic", routerLink: {name: "audiorecords-list"}, badge: () => !!this.recordsCount, badgeContent: () => this.recordsCount },
-                { title: this.$t("pendingphotos"), icon: "camera", routerLink: {name: "photos-list"}, badge: () => !!this.photosCount, badgeContent: () => this.photosCount },
-                { title: this.$t("settings"), icon: "settings_applications", separator: true, routerLink: {name: "settings"}, badge: () => false },
+                { title: this.$t("hey"), icon: "people", routerLink: {name: ""}, badge: () => false },
             ],
             indexTab: 0,
         };
     },
     computed: {
-        ...mapGetters(["username", "isLoggedIn", "lightTheme", "animationsEnabled", "bgTaskRunning", "getAudioRecordsCount", "isTbShow"]),
-        recordsCount () {
-            return this.$store.getters.getAudioRecordsCount(null);
-        },
-        photosCount () {
-            return this.$store.getters.getPhotosCount(null);
-        },
+        ...mapGetters(["username", "isLoggedIn", "lightTheme", "animationsEnabled", "bgTaskRunning",]),
     },
     created () {
         EventBus.$on("snackbar", this.showSnackbar);
@@ -135,9 +106,6 @@ export default {
             this.snackbar.text = message;
             this.snackbar.timeout = timeout;
             this.snackbar.show = true;
-        },
-        goToTungsten () {
-            window.open("http://tungstensoftware.fr/wp/", "_blank");
         },
     },
 };

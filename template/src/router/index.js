@@ -1,14 +1,16 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import HelloWorld from '@/components/HelloWorld';
+import Vue from "vue";
+import Router from "vue-router";
+import HelloWorld from "@/components/HelloWorld";
 import Login from "../components/login/Login";
+import { ServiceAuth } from "../services/serviceAuth";
+import { store } from "../store";
 
 Vue.use(Router);
 
 const _auth = new ServiceAuth();
 
 // eslint-disable-next-line no-unused-vars
-function isAuth() {
+function isAuth () {
     var isInVuex = store.getters.isLoggedIn;
     var user;
     if (!isInVuex) {
@@ -25,7 +27,7 @@ function isAuth() {
 }
 
 // eslint-disable-next-line no-unused-vars
-function requireAuth(to, from, next) {
+function requireAuth (to, from, next) {
     if (isAuth()) {
         next();
     } else {
@@ -34,13 +36,13 @@ function requireAuth(to, from, next) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function isConfigured() {
+function isConfigured () {
     var settings = store.getters.settings;
     return Object.keys(settings.locations).length && settings.mimeAudio !== "";
 }
 
 // eslint-disable-next-line no-unused-vars
-function requireConfigured(to, from, next) {
+function requireConfigured (to, from, next) {
     if (isConfigured()) {
         next();
     } else {
@@ -49,7 +51,7 @@ function requireConfigured(to, from, next) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function requireAuthAndConfigured(to, from, next) {
+function requireAuthAndConfigured (to, from, next) {
     if (!isAuth()) {
         next("/login");
     } else if (!isConfigured()) {
@@ -74,7 +76,7 @@ export default new Router({
         },
         { path: "/", name: "HelloWorld", component: HelloWorld, beforeEnter: requireAuth },
     ],
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior (to, from, savedPosition) {
         if (to.hash) {
             return {
                 selector: to.hash,
