@@ -79,7 +79,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["username", "isLoggedIn", "lightTheme", "animationsEnabled", "bgTaskRunning",]),
+        ...mapGetters([ "username", "isLoggedIn", "lightTheme", "animationsEnabled", "bgTaskRunning" ]),
     },
     created () {
         EventBus.$on("snackbar", this.showSnackbar);

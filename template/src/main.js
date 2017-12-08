@@ -43,7 +43,7 @@ Vue.use(Vuetify, {
         VIcon,
         VGrid,
         VToolbar,
-        transitions
+        transitions,
     }{{#theme}},
     theme: {
         primary: "#ee44aa",
@@ -52,7 +52,7 @@ Vue.use(Vuetify, {
         error: "#FF5252",
         info: "#2196F3",
         success: "#4CAF50",
-        warning: "#FFC107"
+        warning: "#FFC107",
     }{{/theme}}
 });
 {{else}}
@@ -63,7 +63,7 @@ Vue.use(Vuetify{{#theme}}, { theme: {
     error: "#FF5252",
     info: "#2196F3",
     success: "#4CAF50",
-    warning: "#FFC107"
+    warning: "#FFC107",
 }}{{/theme}});
 {{/alacarte}}
 
