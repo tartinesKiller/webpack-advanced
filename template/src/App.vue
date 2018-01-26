@@ -7,13 +7,13 @@
                     <v-list-tile :key="item.title" :to="item.routerLink" ripple>
                         <v-list-tile-action>
                             <v-badge :value="item.badge()" v-if="item.badge()" right>
-                                <span slot="badge">{{ item.badgeContent() }}</span>
-                                <v-icon dark>{{ item.icon }}</v-icon>
+                                <span slot="badge">\{{ item.badgeContent() }}</span>
+                                <v-icon dark>\{{ item.icon }}</v-icon>
                             </v-badge>
-                            <v-icon v-else dark>{{ item.icon }}</v-icon>
+                            <v-icon v-else dark>\{{ item.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                            <v-list-tile-title>\{{ item.title }}</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </template>
@@ -34,7 +34,7 @@
                 </v-fade-transition>
                 <v-menu bottom left>
                     <v-avatar class="red ma-3" slot="activator" v-show="isLoggedIn">
-                        <span class="white--text headline">{{ username | firstLetter }}</span>
+                        <span class="white--text headline">\{{ username | firstLetter }}</span>
                     </v-avatar>
                     <v-list>
                         <v-list-tile @click="logout">
